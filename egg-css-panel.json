@@ -6,8 +6,8 @@
     },
     "exported_at": "2024-02-06T03:40:31+05:30",
     "name": "CSS Panel",
-    "author": "parker@parkervcp.com",
-    "description": "a generic NodeJS egg.",
+    "author": "shaikhnedab@gmsil.com",
+    "description": "a CSS Panel egg.",
     "features": null,
     "docker_images": {
         "ghcr.io\/shaikhnedab\/yolks:nodejs-alpine-pnpm_18": "ghcr.io\/shaikhnedab\/yolks:nodejs-alpine-pnpm_18"
