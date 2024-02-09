@@ -10,7 +10,8 @@
     "description": "a CSS Panel egg.",
     "features": null,
     "docker_images": {
-        "ghcr.io\/shaikhnedab\/yolks:nodejs-alpine-pnpm_18": "ghcr.io\/shaikhnedab\/yolks:nodejs-alpine-pnpm_18"
+        "ghcr.io\/shaikhnedab\/yolks:nodejs-alpine-pnpm_18": "ghcr.io\/shaikhnedab\/yolks:nodejs-alpine-pnpm_18",
+        "ghcr.io\/shaikhnedab\/yolks:nodejs-alpine-pnpm_20": "ghcr.io\/shaikhnedab\/yolks:nodejs-alpine-pnpm_20"
     },
     "file_denylist": [],
     "startup": "pnpm start -p {{STARTUP_PORT}}",
@@ -22,7 +23,7 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/ash\r\n# CSS-Panel Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\n\r\napk add --update --no-cache && apk add git\r\n\r\nmkdir -p \/mnt\/server\r\ncd \/mnt\/server\r\n\r\nif [ \"${USER_UPLOAD}\" == \"true\" ] || [ \"${USER_UPLOAD}\" == \"1\" ]; then\r\n    echo -e \"As you have chosen to upload your files manually. Please Re-run the installer after uploading all the files (Ignore this if already done)\"\r\n\t\r\n\techo \"Installer Nodejs Version\"\r\n    node -v\r\n\r\n    echo \"Installer NPM Version\"\r\n    npm -v\r\n\r\n    echo \"Installer PNPM  Version\"\r\n    pnpm -v\r\n\r\n    echo \"Install PNPM Dependencies\"\r\n    pnpm install\r\n\r\n    echo \"PNPM Build\"\r\n    pnpm build\r\n    exit 0\r\nfi\r\n\r\necho \"Pulling the CSS-Panel from github\"\r\n\r\ngit clone --single-branch --branch ${BRANCH} ${GIT_ADDRESS}\r\n\r\ncp -r CSS-Panel\/* . && rm -rf CSS-Panel\r\n\r\necho \"Installer Nodejs Version\"\r\nnode -v\r\n\r\necho \"Installer NPM Version\"\r\nnpm -v\r\n\r\necho \"Installer PNPM  Version\"\r\npnpm -v\r\n\r\necho \"Install PNPM Dependencies\"\r\npnpm install\r\n\r\necho \"PNPM Build\"\r\npnpm build",
+            "script": "#!\/bin\/ash\r\n# CSS-Panel Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\n\r\napk add --update --no-cache && apk add git\r\n\r\nmkdir -p \/mnt\/server\r\ncd \/mnt\/server\r\n\r\nif [ \"${USER_UPLOAD}\" == \"true\" ] || [ \"${USER_UPLOAD}\" == \"1\" ]; then\r\n    echo -e \"As you have chosen to upload your files manually. Please Re-run the installer after uploading all the files (Ignore this if already done)\"\r\n\t\r\n\techo \"Installer Nodejs Version\"\r\n    node -v\r\n\r\n    echo \"Installer NPM Version\"\r\n    npm -v\r\n\r\n    echo \"Installer PNPM  Version\"\r\n    pnpm -v\r\n\r\n    echo \"Install PNPM Dependencies\"\r\n    pnpm install\r\n\r\n    echo \"PNPM Build\"\r\n    pnpm build\r\n    exit 0\r\nfi\r\n\r\necho \"Pulling the CSS-Panel from github\"\r\n\r\ngit clone --single-branch --branch ${BRANCH} ${GIT_ADDRESS}\r\n\r\ncp -r CSS-Panel\/. . && rm -rf CSS-Panel\r\n\r\necho \"Installer Nodejs Version\"\r\nnode -v\r\n\r\necho \"Installer NPM Version\"\r\nnpm -v\r\n\r\necho \"Installer PNPM  Version\"\r\npnpm -v\r\n\r\necho \"Install PNPM Dependencies\"\r\npnpm install\r\n\r\necho \"PNPM Build\"\r\npnpm build",
             "container": "ghcr.io\/shaikhnedab\/installers_alpine3.19.1:latest",
             "entrypoint": "ash"
         }
