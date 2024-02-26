@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2024-02-25T23:22:12+05:30",
+    "exported_at": "2024-02-26T22:13:11+05:30",
     "name": "L1teD-CS2-WeaponPaints-Website",
     "author": "shaikhnedab@gmail.com",
     "description": "a L1teD-CS2-WeaponPaints-Website egg.",
@@ -23,7 +23,7 @@
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/ash\r\n# CSS-Panel Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\n\r\napk add --update --no-cache && apk add git\r\n\r\nmkdir -p \/mnt\/server\r\ncd \/mnt\/server\r\n\r\nif [ \"${USER_UPLOAD}\" == \"true\" ] || [ \"${USER_UPLOAD}\" == \"1\" ]; then\r\n    echo -e \"As you have chosen to upload your files manually. Please Re-run the installer after uploading all the files (Ignore this if already done)\"\r\n\t\r\n\techo \"Installer Nodejs Version\"\r\n    node -v\r\n\r\n    echo \"Installer NPM Version\"\r\n    npm -v\r\n\r\n    echo \"Install NPM Dependencies\"\r\n    npm i\r\n\r\n    exit 0\r\nfi\r\n\r\necho \"Pulling the CSS-Panel from github\"\r\n\r\ngit init -b main\r\n\r\ngit config --global --add safe.directory \/mnt\/server\r\n\r\ngit pull ${GIT_ADDRESS} ${BRANCH}\r\n\r\necho \"Installer Nodejs Version\"\r\nnode -v\r\n\r\necho \"Installer NPM Version\"\r\nnpm -v\r\n\r\necho \"Install NPM Dependencies\"\r\nnpm i",
+            "script": "#!\/bin\/ash\r\n# L1teD-CS2-WeaponPaints-Website Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\n\r\napk add --update --no-cache && apk add git\r\n\r\nmkdir -p \/mnt\/server\r\ncd \/mnt\/server\r\n\r\nif [ \"${USER_UPLOAD}\" == \"true\" ] || [ \"${USER_UPLOAD}\" == \"1\" ]; then\r\n    echo -e \"As you have chosen to upload your files manually. Please Re-run the installer after uploading all the files (Ignore this if already done)\"\r\n\t\r\n\techo \"Installer Nodejs Version\"\r\n    node -v\r\n\r\n    echo \"Installer NPM Version\"\r\n    npm -v\r\n\r\n    echo \"Install NPM Dependencies\"\r\n    npm i\r\n\r\n    exit 0\r\nfi\r\n\r\necho \"Pulling the CSS-Panel from github\"\r\n\r\ngit init -b main\r\n\r\ngit config --global --add safe.directory \/mnt\/server\r\n\r\ngit pull ${GIT_ADDRESS} ${BRANCH}\r\n\r\necho \"Installer Nodejs Version\"\r\nnode -v\r\n\r\necho \"Installer NPM Version\"\r\nnpm -v\r\n\r\necho \"Install NPM Dependencies\"\r\nnpm i",
             "container": "ghcr.io\/shaikhnedab\/installers_alpine3.19.1:latest",
             "entrypoint": "ash"
         }
@@ -41,7 +41,7 @@
         },
         {
             "name": "Install Branch",
-            "description": "The branch of the CSS Panel to install.",
+            "description": "The branch of the L1teD-CS2-WeaponPaints-Website to install.",
             "env_variable": "BRANCH",
             "default_value": "main",
             "user_viewable": true,
