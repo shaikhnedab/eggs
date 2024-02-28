@@ -1,0 +1,132 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2024-02-28T21:55:32+05:30",
+    "name": "Counter-Strike: Condition Zero",
+    "author": "shaikhnedab@gmail.com",
+    "description": "Counter-Strike: Condition Zero is a multiplayer first-person shooter video game developed by Valve Corporation.",
+    "features": null,
+    "docker_images": {
+        "ghcr.io\/shaikhnedab\/yolks:games_goldsource": "ghcr.io\/shaikhnedab\/yolks:games_goldsource"
+    },
+    "file_denylist": [],
+    "startup": ".\/hlds_run -console -game {{HLDS_MODID}} -port {{SERVER_PORT}} +ip 0.0.0.0 -strictportbind -norestart +map {{HLDS_MAP}} +maxplayers {{HLDS_SLOTS}} +sys_ticrate {{HLDS_TICRATE}} pingboost {{HLDS_PINGBOOST}}",
+    "config": {
+        "files": "{\r\n    \"czero\/server.cfg\": {\r\n        \"parser\": \"file\",\r\n        \"find\": {\r\n            \"hostname\": \"hostname \\\"{{server.build.env.HLDS_NAME}}\\\"\"\r\n        }\r\n    }\r\n}",
+        "startup": "{\r\n    \"done\": \"Connection to Steam servers successful\",\r\n    \"userInteraction\": []\r\n}",
+        "logs": "{\r\n    \"custom\": true,\r\n    \"location\": \"logs\/latest.log\"\r\n}",
+        "stop": "quit"
+    },
+    "scripts": {
+        "installation": {
+            "script": "#!\/bin\/bash\r\n# steamcmd Base Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\n# Image to install with is 'ubuntu:18.04'\r\napt -y update\r\napt -y install software-properties-common\r\ndpkg --add-architecture i386\r\napt -y update\r\napt -y install lib32gcc1 lib32stdc++6\r\napt -y install lib32z1\r\napt -y --no-install-recommends install curl lib32gcc1 ca-certificates\r\n\r\n## just in case someone removed the defaults.\r\nif [ \"${STEAM_USER}\" == \"\" ]; then\r\n    STEAM_USER=anonymous\r\n    STEAM_PASS=\"\"\r\n    STEAM_AUTH=\"\"\r\nfi\r\n\r\n## download and install steamcmd\r\ncd \/tmp\r\nmkdir -p \/mnt\/server\/steamcmd\r\ncurl -sSL -o steamcmd.tar.gz https:\/\/steamcdn-a.akamaihd.net\/client\/installer\/steamcmd_linux.tar.gz\r\ntar -xzvf steamcmd.tar.gz -C \/mnt\/server\/steamcmd\r\nmkdir -p \/mnt\/server\/steamapps # Fix steamcmd disk write error when this folder is missing\r\ncd \/mnt\/server\/steamcmd\r\n\r\n# SteamCMD fails otherwise for some reason, even running as root.\r\n# This is changed at the end of the install process anyways.\r\nchown -R root:root \/mnt\r\nexport HOME=\/mnt\/server\r\n\r\n## install game using steamcmd\r\n.\/steamcmd.sh +force_install_dir \/home\/container +login ${STEAM_USER} ${STEAM_PASS} ${STEAM_AUTH} +app_set_config ${HLDS_APPID} mod ${HLDS_MODID} +app_update ${HLDS_APPID} $( [ \"$HLDS_VALIDATE\" == \"0\" ] || printf %s \"-validate\" ) $( [ \"$HLDS_BETA\" == \"0\" ] || printf %s \"+app_update ${HLDS_APPID} -beta beta $( [ \"$HLDS_VALIDATE\" == \"0\" ] || printf %s \"-validate\" )\" ) +quit \r\n\r\n## set up 32 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk32\r\ncp -v linux32\/steamclient.so ..\/.steam\/sdk32\/steamclient.so\r\n\r\n## set up 64 bit libraries\r\nmkdir -p \/mnt\/server\/.steam\/sdk64\r\ncp -v linux64\/steamclient.so ..\/.steam\/sdk64\/steamclient.so\r\necho set up libraries\r\n\r\necho create server.cfg file\r\ncd \/mnt\/server\/czero\r\ncat >> server.cfg << EOF\r\n\/\/ Use this file to configure your DEDICATED server. \r\n\/\/ This config file is executed on server start.\r\n\r\n\/\/ default server name. Change to \"Bob's Server\", etc.\r\nhostname \"Counter-Strike: Condition Zero\"\r\n\r\n\/\/ load ban files\r\nexec listip.cfg\r\nexec banned.cfg\r\nEOF",
+            "container": "ghcr.io\/shaikhnedab\/installers_debian11slim:latest",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Server Name",
+            "description": "Name to display in server list.",
+            "env_variable": "HLDS_NAME",
+            "default_value": "CSCZ Server",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:128",
+            "field_type": "text"
+        },
+        {
+            "name": "MAP",
+            "description": "Default map at server startup.",
+            "env_variable": "HLDS_MAP",
+            "default_value": "de_dust2",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|alpha_dash",
+            "field_type": "text"
+        },
+        {
+            "name": "GoldSource AppID",
+            "description": "Required for game to update on server restart. Do not modify this.",
+            "env_variable": "HLDS_APPID",
+            "default_value": "90",
+            "user_viewable": false,
+            "user_editable": false,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Max Players",
+            "description": "Number of server slots.",
+            "env_variable": "HLDS_SLOTS",
+            "default_value": "32",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|integer|between:1,32",
+            "field_type": "text"
+        },
+        {
+            "name": "GlodSouce ModID",
+            "description": "",
+            "env_variable": "HLDS_MODID",
+            "default_value": "czero",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Install Beta",
+            "description": "",
+            "env_variable": "HLDS_BETA",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Server Tickrate",
+            "description": "set server ticrate",
+            "env_variable": "HLDS_TICRATE",
+            "default_value": "1000",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Pingboost",
+            "description": "set server pingboost",
+            "env_variable": "HLDS_PINGBOOST",
+            "default_value": "2",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|integer|in:1,2,3",
+            "field_type": "text"
+        },
+        {
+            "name": "Validate Install",
+            "description": "Validate Installed files on every servers Start \/ Restart",
+            "env_variable": "HLDS_VALIDATE",
+            "default_value": "0",
+            "user_viewable": true,
+            "user_editable": false,
+            "rules": "required|boolean",
+            "field_type": "text"
+        },
+        {
+            "name": "Auto Update",
+            "description": "Auto update the server on start.",
+            "env_variable": "AUTO_UPDATE",
+            "default_value": "1",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|boolean",
+            "field_type": "text"
+        }
+    ]
+}
