@@ -4,7 +4,7 @@
         "version": "PTDL_v2",
         "update_url": null
     },
-    "exported_at": "2024-03-03T22:42:25+05:30",
+    "exported_at": "2024-03-05T00:32:19+05:30",
     "name": "CSS Panel",
     "author": "shaikhnedab@gmail.com",
     "description": "a CSS Panel egg.",
@@ -14,31 +14,21 @@
         "ghcr.io\/shaikhnedab\/yolks:nodejs-alpine-pnpm_20": "ghcr.io\/shaikhnedab\/yolks:nodejs-alpine-pnpm_20"
     },
     "file_denylist": [],
-    "startup": "pnpm start -p {{STARTUP_PORT}}",
+    "startup": "pnpm start -p {{SERVER_PORT}}",
     "config": {
-        "files": "{\r\n    \".env\": {\r\n        \"parser\": \"properties\",\r\n        \"find\": {\r\n            \"STEAM_API_KEY\": \"'{{server.build.env.STEAM_API_KEY}}'\",\r\n            \"SESSION_SECRET\": \"'{{server.build.env.SESSION_SECRET}}'\",\r\n            \"DOMAIN\": \"'{{server.build.env.DOMAIN}}'\",\r\n            \"DB_HOST\": \"'{{server.build.env.DB_HOST}}'\",\r\n            \"DB_USER\": \"'{{server.build.env.DB_USER}}'\",\r\n            \"DB_PASSWORD\": \"'{{server.build.env.DB_PASSWORD}}'\",\r\n            \"DB_DATABASE\": \"'{{server.build.env.DB_DATABASE}}'\",\r\n            \"DB_PORT\": \"'{{server.build.env.DB_PORT}}'\"\r\n        }\r\n    }\r\n}",
+        "files": "{\r\n\r\n}",
         "startup": "{\r\n    \"done\": \"Ready in\"\r\n}",
         "logs": "{}",
         "stop": "^^C"
     },
     "scripts": {
         "installation": {
-            "script": "#!\/bin\/ash\r\n# CSS-Panel Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\n\r\napk add --update --no-cache && apk add git\r\n\r\nmkdir -p \/mnt\/server\r\ncd \/mnt\/server\r\n\r\nif [ \"${USER_UPLOAD}\" == \"true\" ] || [ \"${USER_UPLOAD}\" == \"1\" ]; then\r\n    echo -e \"As you have chosen to upload your files manually. Please Re-run the installer after uploading all the files (Ignore this if already done)\"\r\n\t\r\n\techo \"Installer Nodejs Version\"\r\n    node -v\r\n\r\n    echo \"Installer NPM Version\"\r\n    npm -v\r\n\r\n    echo \"Installer PNPM  Version\"\r\n    pnpm -v\r\n\r\n    echo \"Install PNPM Dependencies\"\r\n    pnpm install\r\n\r\n    echo \"PNPM Build\"\r\n    pnpm build\r\n    exit 0\r\nfi\r\n\r\necho \"Pulling the CSS-Panel from github\"\r\n\r\ngit init -b main\r\n\r\ngit config --global --add safe.directory \/mnt\/server\r\n\r\ngit pull ${GIT_ADDRESS} ${BRANCH}\r\n\r\necho \"Remove exisitng .env file\"\r\nrm \/mnt\/server\/.env\r\n\r\necho \"Create new .env file\"\r\noutput_file=\"\/mnt\/server\/.env\"\r\necho \"STEAM_API_KEY=\" >> $output_file\r\necho \"SESSION_SECRET=\" >> $output_file\r\necho \"DOMAIN=\" >> $output_file\r\necho \"DB_HOST=\" >> $output_file\r\necho \"DB_USER=\" >> $output_file\r\necho \"DB_PASSWORD=\" >> $output_file\r\necho \"DB_DATABASE=\" >> $output_file\r\necho \"DB_PORT=\" >> $output_file\r\necho \"Environment variables written to $output_file\"\r\n\r\necho \"Installer Nodejs Version\"\r\nnode -v\r\n\r\necho \"Installer NPM Version\"\r\nnpm -v\r\n\r\necho \"Installer PNPM  Version\"\r\npnpm -v\r\n\r\necho \"Install PNPM Dependencies\"\r\npnpm install\r\n\r\necho \"PNPM Build\"\r\npnpm build",
+            "script": "#!\/bin\/ash\r\n# CSS-Panel Installation Script\r\n#\r\n# Server Files: \/mnt\/server\r\n\r\napk add --update --no-cache && apk add git\r\n\r\nmkdir -p \/mnt\/server\r\ncd \/mnt\/server\r\n\r\nif [ \"${USER_UPLOAD}\" == \"true\" ] || [ \"${USER_UPLOAD}\" == \"1\" ]; then\r\n    echo -e \"As you have chosen to upload your files manually. Please Re-run the installer after uploading all the files (Ignore this if already done)\"\r\n\r\n    exit 0\r\nfi\r\n\r\necho \"Pulling the CSS-Panel from github\"\r\n\r\ngit init -b main\r\n\r\ngit config --global --add safe.directory \/mnt\/server\r\n\r\ngit pull ${GIT_ADDRESS} ${BRANCH}\r\n\r\necho \"Please start the server\"",
             "container": "ghcr.io\/shaikhnedab\/installers_alpine3.19.1:latest",
             "entrypoint": "ash"
         }
     },
     "variables": [
-        {
-            "name": "PORT",
-            "description": "Port to run the server. Default is 3000 (Please assign selected PORT in allocation before installing the server)",
-            "env_variable": "STARTUP_PORT",
-            "default_value": "3000",
-            "user_viewable": true,
-            "user_editable": true,
-            "rules": "required|integer|max:65535",
-            "field_type": "text"
-        },
         {
             "name": "Git Repo Address",
             "description": "GitHub Repo to clone\r\n\r\nI.E. https:\/\/github.com\/ShiNxz\/CSS-Panel.git",
@@ -70,83 +60,13 @@
             "field_type": "text"
         },
         {
-            "name": "Steam API Key",
-            "description": "API key from https:\/\/steamcommunity.com\/dev\/apikey",
-            "env_variable": "STEAM_API_KEY",
-            "default_value": "",
+            "name": "Auto Update on Start",
+            "description": "Enable = 1, Disable = 0",
+            "env_variable": "AUTO_UPDATE",
+            "default_value": "1",
             "user_viewable": true,
             "user_editable": true,
-            "rules": "required|string|max:32",
-            "field_type": "text"
-        },
-        {
-            "name": "Session Secret",
-            "description": "Secret key for sessions, should be just a random string.",
-            "env_variable": "SESSION_SECRET",
-            "default_value": "",
-            "user_viewable": true,
-            "user_editable": true,
-            "rules": "required|string|max:20",
-            "field_type": "text"
-        },
-        {
-            "name": "Domain",
-            "description": "The domain of the panel, for example: https:\/\/panel.example.com\r\nPlease replace with either Host IP or Domain Name.",
-            "env_variable": "DOMAIN",
-            "default_value": "localhost",
-            "user_viewable": true,
-            "user_editable": true,
-            "rules": "max:64|nullable",
-            "field_type": "text"
-        },
-        {
-            "name": "Database Host",
-            "description": "Database connection, same as the plugin",
-            "env_variable": "DB_HOST",
-            "default_value": "",
-            "user_viewable": true,
-            "user_editable": true,
-            "rules": "required|string|max:64",
-            "field_type": "text"
-        },
-        {
-            "name": "Database User",
-            "description": "Database connection, same as the plugin",
-            "env_variable": "DB_USER",
-            "default_value": "",
-            "user_viewable": true,
-            "user_editable": true,
-            "rules": "required|string|max:64",
-            "field_type": "text"
-        },
-        {
-            "name": "Database User Password",
-            "description": "Database connection, same as the plugin",
-            "env_variable": "DB_PASSWORD",
-            "default_value": "",
-            "user_viewable": true,
-            "user_editable": true,
-            "rules": "required|string|max:64",
-            "field_type": "text"
-        },
-        {
-            "name": "Database Name",
-            "description": "Database connection, same as the plugin",
-            "env_variable": "DB_DATABASE",
-            "default_value": "",
-            "user_viewable": true,
-            "user_editable": true,
-            "rules": "required|string|max:64",
-            "field_type": "text"
-        },
-        {
-            "name": "Database Port",
-            "description": "Database connection, same as the plugin",
-            "env_variable": "DB_PORT",
-            "default_value": "3306",
-            "user_viewable": true,
-            "user_editable": true,
-            "rules": "required|integer|max:65535",
+            "rules": "required|boolean",
             "field_type": "text"
         }
     ]
